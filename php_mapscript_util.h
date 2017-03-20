@@ -228,7 +228,7 @@ static zend_always_inline zend_bool zval_set_isref_to_p(zval* pz, zend_bool isre
     zend_call_method_with_2_params(&zobj, Z_OBJCE_P(zobj), NULL, function_name, &retval, arg1, arg2);
 
 #define MAPSCRIPT_CALL_METHOD_2_P(zobj, function_name, retval, arg1, arg2) \
-    MAPSCRIPT_CALL_METHOD(zobj, function_name, retval, arg1, arg2) 
+    MAPSCRIPT_CALL_METHOD_2(zobj, function_name, retval, arg1, arg2) 
 
 #endif /* PHP_VERSION_ID */
 
