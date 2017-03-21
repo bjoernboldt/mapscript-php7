@@ -19,4 +19,4 @@ Then run cmake width WITH_PHP-option:
 cmake -D WITH_PHP=1
 make make install
 
-#Hope you enjoy it!
+Hope you enjoy it!
