@@ -22,8 +22,6 @@ cmake -D WITH_PHP=1
 
 make
 
-make
-
-install
+make install
 
 Hope you enjoy it!
