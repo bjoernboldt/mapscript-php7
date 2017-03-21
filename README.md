@@ -17,6 +17,7 @@ SET(PHP5_POSSIBLE_INCLUDE_PATHS
 Then run cmake width WITH_PHP-option:
 
 cmake -D WITH_PHP=1
-make make install
+make
+make install
 
 Hope you enjoy it!
