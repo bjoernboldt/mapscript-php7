@@ -11,13 +11,19 @@ For example:
 SET(PHP5_POSSIBLE_INCLUDE_PATHS
 
 /usr/include/php/20151012
+
 /usr/include/php
+
 ...
 
 Then run cmake width WITH_PHP-option:
 
 cmake -D WITH_PHP=1
+
 make
-make install
+
+make
+
+install
 
 Hope you enjoy it!
