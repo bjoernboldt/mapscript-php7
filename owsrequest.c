@@ -159,10 +159,21 @@ PHP_METHOD(OWSRequestObj, __set)
    name/value pairs collected. */
 PHP_METHOD(OWSRequestObj, loadParams)
 {
+#if PHP_VERSION_ID >= 70000
+  mapscript_report_php_error(E_WARNING, "This function has not yet been implemented." TSRMLS_CC);
+  RETURN_LONG(MS_FAILURE);
+#else
   zval *zobj = getThis();
-  MAPSCRIPT_ZVAL_P val;
+  zval **val;
   php_owsrequest_object *php_owsrequest;
   void *thread_context;
+
+  PHP_MAPSCRIPT_ERROR_HANDLING(TRUE);
+  if (zend_parse_parameters_none() == FAILURE) {
+    PHP_MAPSCRIPT_RESTORE_ERRORS(TRUE);
+    return;
+  }
+  PHP_MAPSCRIPT_RESTORE_ERRORS(TRUE);
 
 #ifdef ZTS
   thread_context = (void*)TSRMLS_C;
@@ -170,14 +181,7 @@ PHP_METHOD(OWSRequestObj, loadParams)
   thread_context = NULL;
 #endif
 
-  //PHP_MAPSCRIPT_ERROR_HANDLING(TRUE);
-  if (zend_parse_parameters_none() == FAILURE) {
-    //PHP_MAPSCRIPT_RESTORE_ERRORS(TRUE);
-    return;
-  }
-  //PHP_MAPSCRIPT_RESTORE_ERRORS(TRUE);
-
-  php_owsrequest = MAPSCRIPT_OBJ_P(php_owsrequest_object, zobj);
+  php_owsrequest = (php_owsrequest_object *) zend_object_store_get_object(zobj TSRMLS_CC);
 
   if ( (STRING_EQUAL(sapi_module.name,"cli")) ||
        (STRING_EQUAL(sapi_module.name,"cgi")) ||
@@ -187,7 +191,6 @@ PHP_METHOD(OWSRequestObj, loadParams)
     // check if we have input data for GET method
     if (SG(request_info).request_method &&
         STRING_EQUAL(SG(request_info).request_method, "GET")) {
-#if PHP_VERSION_ID < 70000
       zend_is_auto_global("_SERVER", sizeof("_SERVER")-1 TSRMLS_CC);
       if ( PG(http_globals)[TRACK_VARS_SERVER] &&
            (zend_hash_find(PG(http_globals)[TRACK_VARS_SERVER]->value.ht, "QUERY_STRING", sizeof("QUERY_STRING"), (void **) &val) == SUCCESS) &&
@@ -195,16 +198,6 @@ PHP_METHOD(OWSRequestObj, loadParams)
            (Z_STRLEN_PP(val) > 0) ) {
         cgirequestObj_loadParams(php_owsrequest->cgirequest, owsrequest_getenv, NULL, 0, thread_context);
       }
-#else
-      zend_is_auto_global_str("_SERVER", sizeof("_SERVER")-1 TSRMLS_CC);
-
-      if ( ZVAL_NOT_UNDEF(PG(http_globals)[TRACK_VARS_SERVER]) &&
-           ((val  = zend_hash_str_find(Z_ARRVAL(PG(http_globals)[TRACK_VARS_SERVER]), "QUERY_STRING", sizeof("QUERY_STRING"))) != NULL) &&
-           (Z_TYPE_P(val) == IS_STRING) &&
-           (Z_STRLEN_P(val) > 0) ) {
-        cgirequestObj_loadParams(php_owsrequest->cgirequest, owsrequest_getenv, NULL, 0, thread_context);
-      }
-#endif
     } else {
 #if PHP_VERSION_ID >= 50600
       php_stream *s = php_stream_temp_new();
@@ -213,20 +206,12 @@ PHP_METHOD(OWSRequestObj, loadParams)
       long raw_post_data_length = 0;
 
       /* php://input does not support stat */
-#if PHP_VERSION_ID < 70000
-      php_stream_copy_to_stream_ex(input, s, -1, NULL);
-#else
-      raw_post_data_length = php_stream_copy_to_stream_ex(input, s, -1, NULL);
-#endif
-
       php_stream_copy_to_stream_ex(input, s, -1, NULL);
       php_stream_close(input);
 
       php_stream_rewind(s);
       
-#if PHP_VERSION_ID < 70000
       raw_post_data_length = php_stream_copy_to_mem(s, raw_post_data, -1, 0);
-#endif
 
       cgirequestObj_loadParams(php_owsrequest->cgirequest, owsrequest_getenv,
                                raw_post_data,
@@ -240,6 +225,7 @@ PHP_METHOD(OWSRequestObj, loadParams)
   }
 
   RETURN_LONG(php_owsrequest->cgirequest->NumParams);
+#endif
 }
 /* }}} */
 
@@ -298,7 +284,7 @@ PHP_METHOD(OWSRequestObj, addParameter)
 /* }}} */
 
 /* {{{ proto string owsrequest.getName(int index)
-   Return the name of the parameter at index in the request’s array of parameter names. */
+   Return the name of the parameter at index in the request's array of parameter names. */
 PHP_METHOD(OWSRequestObj, getName)
 {
   long index;
@@ -395,10 +381,10 @@ zend_function_entry owsrequest_functions[] = {
 
 char *owsrequest_getenv(const char *name, void *thread_context)
 {
-#ifdef PHP7_DONE
+#if PHP_VERSION_ID < 70000
+//TODO: modify code for PHP7
   zval **val, **ppzval;
-  zval *key;
-  MAPSCRIPT_ZVAL cookie_result;
+  zval *cookie_result, *key;
   HashTable *cookies;
   char *string_key = NULL, *cookie_tmp;
   ulong num_key;
@@ -406,11 +392,7 @@ char *owsrequest_getenv(const char *name, void *thread_context)
   TSRMLS_FETCH_FROM_CTX(thread_context);
 
   if  (STRING_EQUAL(name, "HTTP_COOKIE")) {
-#if PHP_VERSION_ID < 70000
     cookies = PG(http_globals)[TRACK_VARS_COOKIE]->value.ht;
-#else
-    cookies = Z_ARRVAL(PG(http_globals)[TRACK_VARS_COOKIE]);
-#endif
     MAKE_STD_ZVAL(cookie_result);
     ZVAL_STRING(cookie_result, "",1);
     for(zend_hash_internal_pointer_reset(cookies);
@@ -435,10 +417,11 @@ char *owsrequest_getenv(const char *name, void *thread_context)
       return Z_STRVAL_PP(val);
     }
   }
-#endif /* PHP7_DONE */
+#endif
 
   return NULL;
 }
+
 
 void mapscript_create_owsrequest(cgiRequestObj *cgirequest, zval *return_value TSRMLS_DC)
 {
@@ -479,7 +462,7 @@ PHP_MINIT_FUNCTION(owsrequest)
 {
   zend_class_entry ce;
 
-  INIT_CLASS_ENTRY(ce, "owsrequestObj", owsrequest_functions);
+  INIT_CLASS_ENTRY(ce, "OWSRequestObj", owsrequest_functions);
   mapscript_ce_owsrequest = zend_register_internal_class(&ce TSRMLS_CC);
 
   mapscript_ce_owsrequest->create_object = mapscript_owsrequest_create_object;
