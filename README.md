@@ -15,7 +15,7 @@ SET(PHP5_POSSIBLE_INCLUDE_PATHS
 
 ...
 
-Then run cmake width WITH_PHP-option:
+Then run cmake with WITH_PHP-option:
 
 cmake -D WITH_PHP=1
 
