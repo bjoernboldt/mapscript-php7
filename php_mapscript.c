@@ -748,6 +748,29 @@ PHP_FUNCTION(ms_ioStripStdoutBufferContentType)
   }
 }
 
+PHP_FUNCTION(ms_ioGetAndStripStdoutBufferMimeHeaders)
+{
+  hashTableObj *hashtable;
+  char *value, *key = NULL;
+
+  if((hashtable = msIO_getAndStripStdoutBufferMimeHeaders())) {
+
+    array_init(return_value);
+
+    while((key = hashTableObj_nextKey(hashtable, key))) {
+      value = (char *) hashTableObj_get(hashtable, key); 
+#if PHP_VERSION_ID < 70000
+      add_assoc_string(return_value, key, value, 1);
+#else
+      add_assoc_string(return_value, key, value);
+#endif
+    }
+    free(hashtable);
+  }
+  else
+	RETURN_FALSE;
+}
+
 PHP_FUNCTION(ms_ioStripStdoutBufferContentHeaders)
 {
   msIO_stripStdoutBufferContentHeaders();
@@ -923,6 +946,7 @@ zend_function_entry mapscript_functions[] = {
   PHP_FE(ms_ioResetHandlers, NULL)
   PHP_FE(ms_ioStripStdoutBufferContentType, NULL)
   PHP_FE(ms_ioStripStdoutBufferContentHeaders, NULL)
+  PHP_FE(ms_ioGetAndStripStdoutBufferMimeHeaders, NULL)
   PHP_FE(ms_ioGetStdoutBufferBytes, NULL) {
     NULL, NULL, NULL
   }
