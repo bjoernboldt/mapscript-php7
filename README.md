@@ -19,4 +19,3 @@ make
 
 make install
 
-Hope you enjoy it!
