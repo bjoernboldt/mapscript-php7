@@ -154,6 +154,10 @@ static zend_always_inline zend_bool zval_set_isref_to_p(zval* pz, zend_bool isre
 #endif
 
 #if PHP_VERSION_ID >= 70000
+#ifndef _zval_dtor_func_for_ptr
+//use _zval_dtor_func in PHP7.1 instead
+#define _zval_dtor_func_for_ptr _zval_dtor_func
+#endif
 #define MAPSCRIPT_DELREF(zv)                            \
     if (!(Z_ISUNDEF(zv)))                               \
     {                                                   \
