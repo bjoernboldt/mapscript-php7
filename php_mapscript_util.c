@@ -85,10 +85,12 @@ int mapscript_extract_associative_array(HashTable *php, char **array)
   MAPSCRIPT_ZVAL_P value;
 #if PHP_VERSION_ID < 70000
   char *string_key = NULL;
+  ulong num_key;
 #else
   zend_string *string_key = NULL;
+  zend_ulong num_key;
 #endif
-  ulong num_key;
+
   int i = 0;
 
   for(zend_hash_internal_pointer_reset(php);
