@@ -448,7 +448,7 @@ char *owsrequest_getenv(const char *name, void *thread_context)
   HashTable *cookies;
   zend_string *string_key;
   zend_string *result = NULL;
-  ulong num_key;
+  zend_ulong num_key;
   size_t len, sum = 0;
   int i = 0;
   TSRMLS_FETCH_FROM_CTX(thread_context);
