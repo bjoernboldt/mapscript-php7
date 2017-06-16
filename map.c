@@ -312,9 +312,11 @@ ZEND_BEGIN_ARG_INFO_EX(map_removeLayer_args, 0, 0, 1)
 ZEND_ARG_INFO(0, index)
 ZEND_END_ARG_INFO()
 
+#ifdef disabled
 ZEND_BEGIN_ARG_INFO_EX(map_getLabel_args, 0, 0, 1)
 ZEND_ARG_INFO(0, index)
 ZEND_END_ARG_INFO()
+#endif
 
 /* {{{ proto void __construct(string mapFileName, newMapPath)
    Create a new mapObj instance. */
