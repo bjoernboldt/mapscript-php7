@@ -370,7 +370,7 @@ PHP_METHOD(symbolObj, getImage)
   } /* }}} */
 
 zend_function_entry symbol_functions[] = {
-  PHP_ME(symbolObj, __construct, NULL, ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
+  PHP_ME(symbolObj, __construct, symbol___construct_args, ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(symbolObj, __get, symbol___get_args, ZEND_ACC_PUBLIC)
   PHP_ME(symbolObj, __set, symbol___set_args, ZEND_ACC_PUBLIC)
   PHP_MALIAS(symbolObj, set, __set, NULL, ZEND_ACC_PUBLIC)
