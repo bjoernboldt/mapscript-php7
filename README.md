@@ -13,7 +13,7 @@ mkdir build
 
 cd build
 
-cmake -D WITH_PHP=1 -D PHP_INCLUDES=/usr/include/php/20151012 ..
+cmake -DWITH_PHP=1 -DPHP_INCLUDES=/usr/include/php/20151012 ..
 
 make
 
