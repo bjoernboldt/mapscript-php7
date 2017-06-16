@@ -268,7 +268,7 @@ PHP_METHOD(outputFormatObj, getOptionByIndex)
 /* }}} */
 
 zend_function_entry outputformat_functions[] = {
-  PHP_ME(outputFormatObj, __construct, NULL, ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
+  PHP_ME(outputFormatObj, __construct, outputformat___construct_args, ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
   PHP_ME(outputFormatObj, __get, outputformat___get_args, ZEND_ACC_PUBLIC)
   PHP_ME(outputFormatObj, __set, outputformat___set_args, ZEND_ACC_PUBLIC)
   PHP_MALIAS(outputFormatObj, set, __set, NULL, ZEND_ACC_PUBLIC)
