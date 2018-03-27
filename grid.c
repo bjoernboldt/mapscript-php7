@@ -187,6 +187,7 @@ void mapscript_create_grid(graticuleObj *grid, parent_object parent, zval *retur
   MAPSCRIPT_ADDREF(parent.val);
 }
 
+
 #if PHP_VERSION_ID >= 70000
 /* PHP7 - Modification by Bjoern Boldt <mapscript@pixaweb.net> */
 static zend_object *mapscript_grid_create_object(zend_class_entry *ce TSRMLS_DC)
