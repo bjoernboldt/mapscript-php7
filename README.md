@@ -13,6 +13,8 @@ The MapScript support for PHP7 through SWIG is still in development. In the mean
 
 -- CentOS 7.4.1708 with PHP 7.2.3
 
+-- Debian 9.4 with PHP 7.0.27
+
 To compile with PHP7 you have to replace files in directory ~/mapserver/mapscript/php with this code or use the fork https://github.com/bjoernboldt/mapserver.
 
 First compile MapServer with your desired options, then compile with the WITH_PHP option:
