@@ -5,3 +5,4 @@ This project is now part of mapserver v7.4 (see https://github.com/mapserver/map
 
 Native PHP-Mapscript for PHP8 is now available in my fork https://github.com/bjoernboldt/MapServer-with-PHP8-support
 
+
